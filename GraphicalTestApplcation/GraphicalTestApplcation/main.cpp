@@ -9,8 +9,11 @@ int main()
 	InitWindow(1280, 720, "Demo");
 	SetTargetFPS(60);
 
-	Vector2 lineStart{30, 30};
-	Vector2 lineEnd{ 200, 200 };
+	Matrix vehicle = MatrixIdentity();
+	vehicle = MatrixTranslate(200, 200, 0);
+
+	Vector2 lineStart{ 30, 30 };
+	Vector2 lineEnd{ 0, 0 };
 
 	while (!WindowShouldClose())
 	{
