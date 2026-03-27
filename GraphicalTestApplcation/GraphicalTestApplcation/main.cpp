@@ -28,11 +28,11 @@ int main()
 		{10.f, 15.f},
 		{10.f, -15.f},
 	};
+	
+	float vehicleSpeed = 180.f;
+
 	const int pointSize = sizeof(vehiclePoints) / sizeof(vehiclePoints[0]);
-	for (Vector2& point : vehiclePoints)
-	{
-		point = Vector2Transform(point, vehicle);
-	}
+	
 
 	Vector2 lineStart{ 30, 30 };
 	Vector2 lineEnd{ 0, 0 };
@@ -43,7 +43,7 @@ int main()
 	{
 		BeginDrawing();
 		ClearBackground(DARKGRAY);
-
+		
 		float deltaTime = GetFrameTime();
 
 		Vector2 startMovement{};
@@ -54,6 +54,8 @@ int main()
 		if (IsKeyDown(KEY_A))
 		{
 			startMovement.x -= 1;
+			vehicleRotation = MatrixRotateZ(( - 45 * (PI / 180)) * deltaTime);
+			vehicle = MatrixMultiply(vehicleRotation, vehicle);
 		}
 		if (IsKeyDown(KEY_S))
 		{
@@ -62,31 +64,37 @@ int main()
 		if (IsKeyDown(KEY_D))
 		{
 			startMovement.x += 1;
+			vehicleRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
+			vehicle = MatrixMultiply((vehicleRotation), vehicle);
 		}
 		//startMovement{{-1,0,1}, {-1,0,1}};
 		startMovement = Vector2Normalize(startMovement);
-		startMovement = Vector2Scale(startMovement, 80.f * deltaTime);
+		vehicle = MatrixMultiply(
+			MatrixTranslate(0, startMovement.y * vehicleSpeed * deltaTime, 0),
+			vehicle
+		);
 
-		//lineStart += startMovement;
-		lineStart = Vector2Add(lineStart, startMovement);
+		Vector2 updatedPoints[pointSize]{};
 
-		float angleDiff = Vector2Angle(Vector2Subtract(lineEnd, lineStart), { 1,1 });
-		angleDiff *= 180 / 3.14159f;
-		std::string speedText = std::to_string(angleDiff);
+		
+		for (int i = 0; i < pointSize; ++i)
+		{
+			updatedPoints[i] = Vector2Transform(vehiclePoints[i], vehicle);
+		}
+		/*for (Vector2& point : vehiclePoints)
+		{
+			point = Vector2Transform(point, vehicle);
+		}*/
 
 		for (int i = 0; i < pointSize; ++i)
 		{
 			DrawLineEx(
-				vehiclePoints[i],
-				vehiclePoints[(i + 1) % pointSize],
+				updatedPoints[i],
+				updatedPoints[(i + 1) % pointSize],
 				4.f,
 				RED
 			);
 		}
-
-        //DrawLineEx(lineStart, lineEnd, 16.f, WHITE);
-		DrawText(speedText.c_str(), 32, 32, 32, BLACK);
-
 
 		EndDrawing();
 	}
