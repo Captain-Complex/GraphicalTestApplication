@@ -3,13 +3,15 @@
 
 #include <cmath>
 #include <iostream>
-#include <numbers>
 #include<string>
+
+#include "Game.h"
+#include "SceneObject.h"
 
 int main()
 {
-	int screenWidth = 1280;
-	int screenHeight = 720;
+	const int screenWidth = 1280;
+	const int screenHeight = 720;
 	SetTraceLogLevel(LOG_ERROR);
 	InitWindow(1280, 720, "Demo");
 	SetTargetFPS(60);
@@ -21,6 +23,10 @@ int main()
 	vehicleRotation,
 	vehicleTranslation);
 
+	Matrix turret = MatrixIdentity();
+	Matrix turretTranslation = MatrixIdentity();
+	
+	
 	Vector2 vehiclePoints[]
 	{
 		{-10.f, -15.f},
@@ -29,9 +35,19 @@ int main()
 		{10.f, -15.f},
 	};
 	
+	Vector2 turretPoints[]
+	{
+		{-5.f, -30.f},
+		{-5.f, 10.f},
+		{5.f, 10.f},
+		{5.f, -30.f},
+	};
+
+	
 	float vehicleSpeed = 180.f;
 
 	const int pointSize = sizeof(vehiclePoints) / sizeof(vehiclePoints[0]);
+	const int turretSize = sizeof(turretPoints) / sizeof(turretPoints[0]);
 	
 
 	Vector2 lineStart{ 30, 30 };
@@ -47,6 +63,8 @@ int main()
 		float deltaTime = GetFrameTime();
 
 		Vector2 startMovement{};
+		Matrix turretRotation = MatrixIdentity();
+
 		if (IsKeyDown(KEY_W))
 		{
 			startMovement.y -= 1;
@@ -67,24 +85,40 @@ int main()
 			vehicleRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
 			vehicle = MatrixMultiply((vehicleRotation), vehicle);
 		}
-		//startMovement{{-1,0,1}, {-1,0,1}};
+		if (IsKeyDown(KEY_Q))
+		{
+			turretRotation = MatrixRotateZ((-45 * (PI / 180)) * deltaTime);
+			
+		}
+		if (IsKeyDown(KEY_E))
+		{
+			turretRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
+			
+		}
+		/*if (IsKeyDown(KEY_SPACE))
+		{
+
+		}*/
+		
 		startMovement = Vector2Normalize(startMovement);
 		vehicle = MatrixMultiply(
 			MatrixTranslate(0, startMovement.y * vehicleSpeed * deltaTime, 0),
 			vehicle
 		);
+		turret = MatrixMultiply(turretRotation, turret);
+		Matrix combine = MatrixMultiply(turret, vehicle);
 
 		Vector2 updatedPoints[pointSize]{};
-
+		Vector2 updatedTurret[turretSize]{};
 		
 		for (int i = 0; i < pointSize; ++i)
 		{
 			updatedPoints[i] = Vector2Transform(vehiclePoints[i], vehicle);
 		}
-		/*for (Vector2& point : vehiclePoints)
+		for (int i = 0; i < pointSize; ++i)
 		{
-			point = Vector2Transform(point, vehicle);
-		}*/
+			updatedTurret[i] = Vector2Transform(turretPoints[i], combine);
+		}
 
 		for (int i = 0; i < pointSize; ++i)
 		{
@@ -93,6 +127,16 @@ int main()
 				updatedPoints[(i + 1) % pointSize],
 				4.f,
 				RED
+			);
+		}
+
+		for (int i = 0; i < pointSize; ++i)
+		{
+			DrawLineEx(
+				updatedTurret[i],
+				updatedTurret[(i + 1) % pointSize],
+				4.f,
+				BLUE
 			);
 		}
 
