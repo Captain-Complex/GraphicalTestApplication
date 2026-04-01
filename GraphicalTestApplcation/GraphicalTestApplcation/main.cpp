@@ -20,13 +20,16 @@ int main()
 	Matrix vehicleRotation = MatrixRotateZ(45 * (PI / 180));
 	Matrix vehicleTranslation = MatrixTranslate(screenWidth / 2, screenHeight / 2, 0);
 	vehicle = MatrixMultiply(
-	vehicleRotation,
-	vehicleTranslation);
+		vehicleRotation,
+		vehicleTranslation);
 
 	Matrix turret = MatrixIdentity();
 	Matrix turretTranslation = MatrixIdentity();
-	
-	
+
+	Matrix bullet = MatrixIdentity();
+
+	Vector2 bulletMovement{};
+
 	Vector2 vehiclePoints[]
 	{
 		{-10.f, -15.f},
@@ -42,27 +45,27 @@ int main()
 		{5.f, 10.f},
 		{5.f, -30.f},
 	};
-
+	Vector2 bulletPos{ 0, -30.f };
 	
+	bool fired = false;
+
 	float vehicleSpeed = 180.f;
 
 	const int pointSize = sizeof(vehiclePoints) / sizeof(vehiclePoints[0]);
 	const int turretSize = sizeof(turretPoints) / sizeof(turretPoints[0]);
-	
 
 	Vector2 lineStart{ 30, 30 };
 	Vector2 lineEnd{ 0, 0 };
-	//lineEnd = Vector2Transform(lineEnd, vehicle);
-	//lineEnd = (lineEnd.x, lineEnd.y, 0, 1)
 
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(DARKGRAY);
-		
-		float deltaTime = GetFrameTime();
 
+		float deltaTime = GetFrameTime();
+		
 		Vector2 startMovement{};
+		
 		Matrix turretRotation = MatrixIdentity();
 
 		if (IsKeyDown(KEY_W))
@@ -72,7 +75,7 @@ int main()
 		if (IsKeyDown(KEY_A))
 		{
 			startMovement.x -= 1;
-			vehicleRotation = MatrixRotateZ(( - 45 * (PI / 180)) * deltaTime);
+			vehicleRotation = MatrixRotateZ((-45 * (PI / 180)) * deltaTime);
 			vehicle = MatrixMultiply(vehicleRotation, vehicle);
 		}
 		if (IsKeyDown(KEY_S))
@@ -88,18 +91,15 @@ int main()
 		if (IsKeyDown(KEY_Q))
 		{
 			turretRotation = MatrixRotateZ((-45 * (PI / 180)) * deltaTime);
-			
+
 		}
 		if (IsKeyDown(KEY_E))
 		{
 			turretRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
-			
-		}
-		/*if (IsKeyDown(KEY_SPACE))
-		{
 
-		}*/
+		}
 		
+
 		startMovement = Vector2Normalize(startMovement);
 		vehicle = MatrixMultiply(
 			MatrixTranslate(0, startMovement.y * vehicleSpeed * deltaTime, 0),
@@ -126,7 +126,7 @@ int main()
 				updatedPoints[i],
 				updatedPoints[(i + 1) % pointSize],
 				4.f,
-				RED
+				DARKGREEN
 			);
 		}
 
@@ -136,12 +136,31 @@ int main()
 				updatedTurret[i],
 				updatedTurret[(i + 1) % pointSize],
 				4.f,
-				BLUE
+				BROWN
 			);
 		}
 
+		if (IsKeyDown(KEY_SPACE))
+		{
+			fired = true;
+			
+			Vector2 turretEnd = { (updatedTurret[0].x + updatedTurret[3].x) / 2, updatedTurret[0].y };
+			bulletPos = turretEnd;
+			
+			
+		}
+		if (fired == true)
+			{
+				DrawCircle(
+					bulletPos.x,
+					bulletPos.y,
+					10,
+					YELLOW
+				);
+				bulletMovement = bulletPos;
+			}
 		EndDrawing();
 	}
-
+	
 	CloseWindow();
 }
