@@ -104,34 +104,25 @@ public:
     }
     friend myMatrix& operator*=(myMatrix& lhs, myMatrix rhs)
     {
-        myVector row1{ lhs.m1,lhs.m5,lhs.m9,lhs.m13 };
-        myVector row2{ lhs.m2,lhs.m6,lhs.m10,lhs.m14 };
-        myVector row3{ lhs.m3,lhs.m7,lhs.m11,lhs.m15 };
-        myVector row4{ lhs.m4,lhs.m8,lhs.m12,lhs.m16 };
-        myVector column1{ rhs.m1,rhs.m2,rhs.m3,rhs.m4 };
-        myVector column2{ rhs.m5,rhs.m6,rhs.m7,rhs.m8 };
-        myVector column3{ rhs.m9,rhs.m10,rhs.m11,rhs.m12 };
-        myVector column4{ rhs.m13,rhs.m14,rhs.m15,rhs.m16 };
+        lhs.m1 = lhs.m1 * rhs.m1 + lhs.m5 * rhs.m2 + lhs.m9 * rhs.m3 + lhs.m13 * rhs.m4;
+        lhs.m2 = lhs.m2 * rhs.m1 + lhs.m6 * rhs.m2 + lhs.m10 * rhs.m3 + lhs.m14 * rhs.m4;
+        lhs.m3 = lhs.m3 * rhs.m1 + lhs.m7 * rhs.m2 + lhs.m11 * rhs.m3 + lhs.m15 * rhs.m4;
+        lhs.m4 = lhs.m4 * rhs.m1 + lhs.m8 * rhs.m2 + lhs.m12 * rhs.m3 + lhs.m16 * rhs.m4;
 
-        lhs.m1 = row1.Dot(column1) + row1.w * column1.w;
-        lhs.m2 = row2.Dot(column1) + row2.w * column1.w;
-        lhs.m3 = row3.Dot(column1) + row3.w * column1.w;
-        lhs.m4 = row4.Dot(column1) + row4.w * column1.w;
+        lhs.m5 = lhs.m1 * rhs.m5 + lhs.m5 * rhs.m6 + lhs.m9 * rhs.m7 + lhs.m13 * rhs.m8;
+        lhs.m6 = lhs.m2 * rhs.m5 + lhs.m6 * rhs.m6 + lhs.m10 * rhs.m7 + lhs.m14 * rhs.m8;
+        lhs.m7 = lhs.m3 * rhs.m5 + lhs.m7 * rhs.m6 + lhs.m11 * rhs.m7 + lhs.m15 * rhs.m8;
+        lhs.m8 = lhs.m4 * rhs.m5 + lhs.m8 * rhs.m6 + lhs.m12 * rhs.m7 + lhs.m16 * rhs.m8;
 
-        lhs.m5 = row1.Dot(column2) + row1.w * column2.w;
-        lhs.m6 = row2.Dot(column2) + row2.w * column2.w;
-        lhs.m7 = row3.Dot(column2) + row3.w * column2.w;
-        lhs.m8 = row4.Dot(column2) + row4.w * column2.w;
+        lhs.m9 = lhs.m1 * rhs.m9 + lhs.m5 * rhs.m10 + lhs.m9 * rhs.m11 + lhs.m13 * rhs.m12;
+        lhs.m10 = lhs.m2 * rhs.m1 + lhs.m6 * rhs.m2 + lhs.m10 * rhs.m11 + lhs.m14 * rhs.m12;
+        lhs.m11 = lhs.m3 * rhs.m1 + lhs.m7 * rhs.m2 + lhs.m11 * rhs.m11 + lhs.m15 * rhs.m12;
+        lhs.m12 = lhs.m4 * rhs.m1 + lhs.m8 * rhs.m2 + lhs.m12 * rhs.m11 + lhs.m16 * rhs.m12;
 
-        lhs.m9 = row1.Dot(column3) + row1.w * column3.w;
-        lhs.m10 = row2.Dot(column3) + row2.w * column3.w;
-        lhs.m11 = row3.Dot(column3) + row3.w * column3.w;
-        lhs.m12 = row4.Dot(column3) + row4.w * column3.w;
-
-        lhs.m13 = row1.Dot(column4) + row1.w * column4.w;
-        lhs.m14 = row2.Dot(column4) + row2.w * column4.w;
-        lhs.m15 = row3.Dot(column4) + row3.w * column4.w;
-        lhs.m16 = row4.Dot(column4) + row4.w * column4.w;
+        lhs.m13 = lhs.m1 * rhs.m13 + lhs.m5 * rhs.m14 + lhs.m9 * rhs.m15 + lhs.m13 * rhs.m16;
+        lhs.m14 = lhs.m2 * rhs.m13 + lhs.m6 * rhs.m14 + lhs.m10 * rhs.m15 + lhs.m14 * rhs.m16;
+        lhs.m15 = lhs.m3 * rhs.m13 + lhs.m7 * rhs.m14 + lhs.m11 * rhs.m15 + lhs.m15 * rhs.m16;
+        lhs.m16 = lhs.m4 * rhs.m13 + lhs.m8 * rhs.m14 + lhs.m12 * rhs.m15 + lhs.m16 * rhs.m16;
 
         return lhs;
     }
@@ -351,7 +342,7 @@ public:
         }
         return true;
     }
-
+    
     myVector GetRight()
     {
         myVector right = { m1, m5,};

@@ -7,11 +7,12 @@
 
 #include "Game.h"
 #include "SceneObject.h"
+//here is my vector and matrix but i tried adding them which all worked well until it was time to draw so i went back to raylibs variables
 #include "MyVector.hpp"
 #include "MyMatrix.hpp"
 
 //mainually adding my version of the raylib function to prove i can do basic collision
-bool IsCircleCollision(myVector centre1, float radius1, myVector centre2, float radius2)
+bool IsCircleCollision(Vector2 centre1, float radius1, Vector2 centre2, float radius2)
 {
 	float radTotal = radius1 + radius2;
 	float distance = sqrtf((centre2.x - centre1.x) * (centre2.x - centre1.x) +
@@ -30,18 +31,18 @@ int main()
 	SetTraceLogLevel(LOG_ERROR);
 	InitWindow(1280, 720, "Demo");
 	SetTargetFPS(60);
-	MatrixMultiply
-	myMatrix vehicle = vehicle.myMatrixIdentity();
-	myMatrix vehicleRotation = vehicleRotation.MakeRotateZ(45 * (PI / 180));
-	myMatrix vehicleTranslation = vehicleTranslation.MakeTranslation(screenWidth / 2, screenHeight / 2, 0);
+	
+	Matrix vehicle = MatrixIdentity();
+	Matrix vehicleRotation = MatrixRotateZ(45 * (PI / 180));
+	Matrix vehicleTranslation = MatrixTranslate(screenWidth / 2, screenHeight / 2, 0);
 	vehicle = vehicleRotation *vehicleTranslation;
 
-	myMatrix turret = turret.myMatrixIdentity();
-	myMatrix turretTranslation = turretTranslation.myMatrixIdentity();
+	Matrix turret = MatrixIdentity();
+	Matrix turretTranslation = MatrixIdentity();
 
-	myVector bulletMovement{};
+	Vector2 bulletMovement{};
 
-	myVector vehiclePoints[]
+	Vector2 vehiclePoints[]
 	{
 		{-10.f, -15.f},
 		{-10.f, 15.f},
@@ -49,14 +50,14 @@ int main()
 		{10.f, -15.f},
 	};
 	
-	myVector turretPoints[]
+	Vector2 turretPoints[]
 	{
 		{-5.f, -30.f},
 		{-5.f, 10.f},
 		{5.f, 10.f},
 		{5.f, -30.f},
 	};
-	myVector bulletPos{ 0, -30.f };
+	Vector2 bulletPos{ 0, -30.f };
 	
 	bool fired = false;
 
@@ -91,9 +92,9 @@ int main()
 		collision8 = IsCircleCollision(bulletPos, 10, { (screenWidth / 4) * 3, (screenHeight / 4) * 3 }, 40);
 
 
-		myVector startMovement{};
+		Vector2 startMovement{};
 		
-		myMatrix turretRotation = turretRotation.myMatrixIdentity();
+		Matrix turretRotation = MatrixIdentity();
 
 		if (IsKeyDown(KEY_W))
 		{
@@ -102,7 +103,7 @@ int main()
 		if (IsKeyDown(KEY_A))
 		{
 			startMovement.x -= 1;
-			vehicleRotation = vehicleRotation.MakeRotateZ((-45 * (PI / 180)) * deltaTime);
+			vehicleRotation = MatrixRotateZ((-45 * (PI / 180)) * deltaTime);
 			vehicle = vehicleRotation * vehicle;
 		}
 		if (IsKeyDown(KEY_S))
@@ -112,29 +113,30 @@ int main()
 		if (IsKeyDown(KEY_D))
 		{
 			startMovement.x += 1;
-			vehicleRotation = vehicleRotation.MakeRotateZ((45 * (PI / 180)) * deltaTime);
+			vehicleRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
 			vehicle = (vehicleRotation) * vehicle;
 		}
 		if (IsKeyDown(KEY_Q))
 		{
-			turretRotation = turretRotation.MakeRotateZ((-45 * (PI / 180)) * deltaTime);
+			turretRotation = MatrixRotateZ((-45 * (PI / 180)) * deltaTime);
 
 		}
 		if (IsKeyDown(KEY_E))
 		{
-			turretRotation = turretRotation.MakeRotateZ((45 * (PI / 180)) * deltaTime);
+			turretRotation = MatrixRotateZ((45 * (PI / 180)) * deltaTime);
 
 		}
 		
 
-		startMovement = startMovement.Normalised();
-		vehicle = 
-			vehicle.MakeTranslation(0, startMovement.y * vehicleSpeed * deltaTime, 0) * vehicle;
+		startMovement = Vector2Normalize(startMovement);
+		vehicle = MatrixMultiply(
+			MatrixTranslate(0, startMovement.y * vehicleSpeed * deltaTime, 0),
+			vehicle);
 		turret = turretRotation * turret;
-		myMatrix combine = turret * vehicle;
+		Matrix combine = turret * vehicle;
 
-		myVector updatedPoints[pointSize]{};
-		myVector updatedTurret[turretSize]{};
+		Vector2 updatedPoints[pointSize]{};
+		Vector2 updatedTurret[turretSize]{};
 		
 		for (int i = 0; i < pointSize; ++i)
 		{

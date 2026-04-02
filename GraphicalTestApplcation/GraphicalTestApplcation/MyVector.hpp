@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include<string>
+#include "MyMatrix.hpp"
 
 struct myVector
 {
@@ -209,5 +210,18 @@ public:
     float Angle2D() const
     {
         return std::atan2(y, x);
+    }
+    myVector myVectorTransform(myVector v, myMatrix mat)
+    {
+        myVector result = { 0 ,0 };
+
+        float x = v.x;
+        float y = v.y;
+        float z = 0;
+
+        result.x = mat.m1 * x + mat.m5 * y + mat.m9 * z + mat.m13;
+        result.y = mat.m2 * x + mat.m6 * y + mat.m10 * z + mat.m14;
+
+        return result;
     }
 };
