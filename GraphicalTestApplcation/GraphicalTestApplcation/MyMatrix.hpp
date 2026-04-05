@@ -97,7 +97,7 @@ public:
         return temp;
     }
 
-   
+
     friend myMatrix operator*(myMatrix a, myMatrix b)
     {
         return a *= b;
@@ -342,37 +342,5 @@ public:
         }
         return true;
     }
-    
-    myVector GetRight()
-    {
-        myVector right = { m1, m5,};
-        return right;
-    }
-    myVector GetUp()
-    {
-        myVector up = { m5, m6};
-        return up;
 
-    }
-    myVector GetForward()
-    {
-        myVector forward = { m3, m10};
-        return forward;
-    }
-    myVector GetPosition()
-    {
-        //not tested so added translation
-        myMatrix::MakeTranslation(2.0f, 3.0f, 4.0f);
-        myVector postion = { m4, m8};
-        return postion;
-    }
-
-    myMatrix SetTranslate(myVector other)
-    {
-        //included in assignment but not tests
-        myMatrix translate;
-        translate.m13 = other.x;
-        translate.m14 = other.y;
-        return translate;
-    }
 };
