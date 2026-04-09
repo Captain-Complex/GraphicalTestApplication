@@ -7,7 +7,8 @@
 
 #include "Game.h"
 #include "SceneObject.h"
-//here is my vector and matrix but i tried adding them which all worked well until it was time to draw so i went back to raylibs variables
+//here is my vector and matrix but i tried adding them which all worked well 
+//until it was time to draw so i went back to raylibs variables but using my structs
 #include "MyVector.hpp"
 #include "MyMatrix.hpp"
 
