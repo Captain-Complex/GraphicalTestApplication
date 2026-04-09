@@ -3,6 +3,7 @@
 #include <iostream>
 #include<string>
 #include "MyVector.hpp"
+#include <raylib.h>
 
 struct myMatrix
 {
@@ -71,6 +72,81 @@ public:
         m16 = mat4m16;
     }
 
+    myMatrix operator = (Matrix& other)
+    {
+        myMatrix temp;
+        temp.m1 = m1 = other.m0;
+        temp.m2 = m2 = other.m1;
+        temp.m3 = m3 = other.m2;
+        temp.m4 = m4 = other.m3;
+
+        temp.m5 = m5 = other.m4;
+        temp.m6 = m6 = other.m5;
+        temp.m7 = m7 = other.m6;
+        temp.m8 = m8 = other.m7;
+
+        temp.m9 = m9 = other.m8;
+        temp.m10 = m10 = other.m9;
+        temp.m11 = m11 = other.m10;
+        temp.m12 = m12 = other.m11;
+
+        temp.m13 = m13 = other.m12;
+        temp.m14 = m14 = other.m13;
+        temp.m15 = m15 = other.m14;
+        temp.m16 = m16 = other.m15;
+
+        return temp;
+    }
+    myMatrix operator = (const Matrix& other)
+    {
+        myMatrix temp;
+        temp.m1 = m1 = other.m0;
+        temp.m2 = m2 = other.m1;
+        temp.m3 = m3 = other.m2;
+        temp.m4 = m4 = other.m3;
+
+        temp.m5 = m5 = other.m4;
+        temp.m6 = m6 = other.m5;
+        temp.m7 = m7 = other.m6;
+        temp.m8 = m8 = other.m7;
+
+        temp.m9 = m9 = other.m8;
+        temp.m10 = m10 = other.m9;
+        temp.m11 = m11 = other.m10;
+        temp.m12 = m12 = other.m11;
+
+        temp.m13 = m13 = other.m12;
+        temp.m14 = m14 = other.m13;
+        temp.m15 = m15 = other.m14;
+        temp.m16 = m16 = other.m15;
+
+        return temp;
+    }
+    myMatrix operator = (myMatrix& other)
+    {
+        myMatrix temp;
+        temp.m1 = m1 = other.m1;
+        temp.m2 = m2 = other.m2;
+        temp.m3 = m3 = other.m3;
+        temp.m4 = m4 = other.m4;
+
+        temp.m5 = m5 = other.m5;
+        temp.m6 = m6 = other.m6;
+        temp.m7 = m7 = other.m7;
+        temp.m8 = m8 = other.m8;
+
+        temp.m9 = m9 = other.m9;
+        temp.m10 = m10 = other.m10;
+        temp.m11 = m11 = other.m11;
+        temp.m12 = m12 = other.m12;
+
+        temp.m13 = m13 = other.m13;
+        temp.m14 = m14 = other.m14;
+        temp.m15 = m15 = other.m15;
+        temp.m16 = m16 = other.m16;
+
+        return temp;
+    }
     myMatrix operator = (const myMatrix& other)
     {
         myMatrix temp;
@@ -97,12 +173,11 @@ public:
         return temp;
     }
 
-
-    friend myMatrix operator*(myMatrix a, myMatrix b)
+    friend myMatrix operator *(myMatrix a, myMatrix b)
     {
         return a *= b;
     }
-    friend myMatrix& operator*=(myMatrix& lhs, myMatrix rhs)
+    friend myMatrix& operator *=(myMatrix& lhs, myMatrix rhs)
     {
         lhs.m1 = lhs.m1 * rhs.m1 + lhs.m5 * rhs.m2 + lhs.m9 * rhs.m3 + lhs.m13 * rhs.m4;
         lhs.m2 = lhs.m2 * rhs.m1 + lhs.m6 * rhs.m2 + lhs.m10 * rhs.m3 + lhs.m14 * rhs.m4;
@@ -281,23 +356,20 @@ public:
     static myMatrix MakeScale(float x, float y, float z)
     {
         myMatrix result = {
-            1.f, 0.f, 0.f, 0.f,
-            0.f, 1.f, 0.f, 0.f,
-            0.f, 0.f, 1.f, 0.f,
+            x, 0.f, 0.f, 0.f,
+            0.f, y, 0.f, 0.f,
+            0.f, 0.f, z, 0.f,
             0.f, 0.f, 0.f, 1.f
         };
-        result.m1 *= x;
-        result.m6 *= y;
-        result.m11 *= z;
         return result;
     }
     static myMatrix MakeTranslation(float x, float y, float z)
     {
         myMatrix result = {
-            1.f, 0.f, 0.f, 0.f,
-            0.f, 1.f, 0.f, 0.f,
-            0.f, 0.f, 1.f, 0.f,
-            x, y, z, 1.f
+            1.f, 0.f, 0.f, x,
+            0.f, 1.f, 0.f, y,
+            0.f, 0.f, 1.f, z,
+            0.f, 0.f, 0.f, 1.f
         };
         return result;
     }
@@ -342,5 +414,25 @@ public:
         }
         return true;
     }
-
+    Matrix MatrixConvertRaylib(myMatrix mat)
+    {
+        Matrix tempConvert;
+        tempConvert.m0 = mat.m1;
+        tempConvert.m1 = mat.m2;
+        tempConvert.m2 = mat.m3;
+        tempConvert.m3 = mat.m4;
+        tempConvert.m4 = mat.m5;
+        tempConvert.m5 = mat.m6;
+        tempConvert.m6 = mat.m7;
+        tempConvert.m7 = mat.m8;
+        tempConvert.m8 = mat.m9;
+        tempConvert.m9 = mat.m10;
+        tempConvert.m10 = mat.m11;
+        tempConvert.m11 = mat.m12;
+        tempConvert.m12 = mat.m13;
+        tempConvert.m13 = mat.m14;
+        tempConvert.m14 = mat.m15;
+        tempConvert.m15 = mat.m16;
+        return tempConvert;
+    }
 };

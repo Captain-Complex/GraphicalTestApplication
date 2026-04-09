@@ -3,6 +3,7 @@
 #include <iostream>
 #include<string>
 #include "MyMatrix.hpp"
+#include <raylib.h>
 
 struct myVector
 {
@@ -39,6 +40,14 @@ public:
         y - v3Subtract.y,
         };
     }
+    const myVector operator - (const myVector& v3Subtract)
+    {
+        return {
+         x - v3Subtract.x,
+        y - v3Subtract.y,
+        };
+    }
+
     myVector operator * (myVector& v3Multiply)
     {
         return {
@@ -55,13 +64,28 @@ public:
         return myVector(x / v3ScalarDivide, y / v3ScalarDivide);
     }
 
-    myVector operator = (myVector& v3Assignment)
+     myVector& operator = (myVector& v3Assignment)
     {
         myVector tempAssignment;
         tempAssignment.x = x = v3Assignment.x;
         tempAssignment.y = y = v3Assignment.y;
         return tempAssignment;
     }
+     myVector& operator = (const myVector& v3Assignment)
+     {
+         myVector tempAssignment;
+         tempAssignment.x = x = v3Assignment.x;
+         tempAssignment.y = y = v3Assignment.y;
+         return tempAssignment;
+     }
+     myVector& operator = (Vector2 v3Assignment)
+     {
+         myVector tempAssignment;
+         tempAssignment.x = x = v3Assignment.x;
+         tempAssignment.y = y = v3Assignment.y;
+         return tempAssignment;
+     }
+
     myVector operator += (myVector& v3AddAssign)
     {
         myVector tempAddAssign;
@@ -223,5 +247,12 @@ public:
         result.y = mat.m2 * x + mat.m6 * y + mat.m10 * z + mat.m14;
 
         return result;
+    }
+    Vector2 ConvertRaylib(myVector v)
+    {
+        Vector2 convert;
+        convert.x = v.x;
+        convert.y = v.y;
+        return convert;
     }
 };
